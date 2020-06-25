@@ -15,11 +15,9 @@ enum UnsplashError:Error {
 
 struct DataRequest {
     let resourceURL:URL
-    let API_KEY = ""
-    let baseURL = "https://api.unsplash.com"
     
     init(searchStr:String) {
-        let resourceString = "\(baseURL)/photos?client_id=\(API_KEY)"
+        let resourceString = "\(Configuration.shared.baseURL)/photos?client_id=\(Configuration.shared.accessKey)"
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }

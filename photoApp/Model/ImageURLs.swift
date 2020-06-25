@@ -9,9 +9,9 @@
 import Foundation
 
 struct ImageURLs: Decodable {
-    let full: String
-    let raw: String
-    let regular: String
-    let small: String
-    let thumb: String
+    let full: String?
+    let raw: String?
+    let regular: String?
+    let small: String?
+    let thumb: String?
 }

@@ -31,12 +31,21 @@ struct DataRequest {
                 return
             }
             do {
-                let decoder = JSONDecoder()
-                let response = try decoder.decode(ImageResponse.self, from: jsonData)
-                let imageDetails = response.response.images
-                completion(.success(imageDetails))
+                let response:[ImageDetail] = try JSONDecoder().decode([ImageDetail].self, from: jsonData)
+                completion(.success(response))
+            } catch DecodingError.dataCorrupted(let context) {
+                print(context)
+            } catch DecodingError.keyNotFound(let key, let context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch DecodingError.valueNotFound(let value, let context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch DecodingError.typeMismatch(let type, let context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
             } catch {
-                completion(.failure(.canNotProcessData))
+                print("error: ", error)
             }
         }
         dataTask.resume()

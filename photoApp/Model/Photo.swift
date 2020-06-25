@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct imageReponse:Decodable {
+struct ImageResponse:Decodable {
     let response:Images
 }
 

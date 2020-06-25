@@ -12,7 +12,7 @@ struct UnsplashConfiguration {
     
     let baseURL = "https://api.unsplash.com/"
     
-    public var accessKey = "X2bH_OpajYnvTP-8z0as9coZhR6juFSVd_xdFexbRLA"
-    public var secretKey = "AFgNaa-oEv-a5U5BVTTE8KRtavCrjo9p66v77NRilfs"
+    public var accessKey = ""
+    public var secretKey = ""
     public var query:String?
 }

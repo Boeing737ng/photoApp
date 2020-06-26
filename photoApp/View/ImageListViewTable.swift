@@ -34,8 +34,10 @@ class ImageListViewTable: UITableView, UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tableCell", for: indexPath) as! ImageListViewCell
         let imageData = imageList[indexPath.row]
-        let image:UIImage? = UIImage(data: (imageData.urls?.regular?.data(using: .utf8))!)
-        cell.photoView.image = image
+        guard let image = try? Data(contentsOf: imageData.urls!.thumb) else {
+            return cell
+        }
+        cell.photoView.image = UIImage(data: image)
         cell.likes.text = "Likes: \(String(describing: imageData.likes))"
         return cell
     }

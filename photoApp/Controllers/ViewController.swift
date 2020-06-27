@@ -12,16 +12,15 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     //MARK:  - Properties
+    let UPDATE_COUNT = 5
+    var searchText:String?
+    var currentPage:Int = 1
+    var selectedIdx:Int = 0
     
-    var images = [ImageDetail]() {
-        didSet {
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
-        }
-    }
+    var viewModel = ViewModel.init()
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,30 +29,72 @@ class ViewController: UIViewController {
             layout.delegate = self
         }
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        downloadImage()
+        //fetchImageData()
+        
+        viewModel.reloadData = {
+            self.collectionView.reloadData()
+        }
+        
+        viewModel.showLoading = {
+
+            if(self.viewModel.isLodingData) {
+                self.loadingIndicator.startAnimating()
+                self.collectionView.alpha = 0.0
+            } else {
+                self.loadingIndicator.stopAnimating()
+                self.collectionView.alpha = 1.0
+            }
+        }
+        
+        viewModel.fetchAllPhotos(page: 1, per_page: 10)
     }
     
-    func downloadImage() {
-        let imageRequest = DataRequest(searchStr: "")
-        imageRequest.getImageData { [weak self] result in
-            switch result {
-            case .failure(let error):
-                print(error)
-            case .success(let images):
-                self?.images.append(contentsOf: images)
-            }
+    func fetchNextPage() {
+        if(searchText == "" || searchText == nil) {
+            viewModel.fetchAllPhotos(page: currentPage, per_page: UPDATE_COUNT)
+        } else {
+            viewModel.fetchQueryPhotos(query: searchText!, page: currentPage)
         }
     }
     
+    func setSearchText(text:String?) {
+        if(text != self.searchText) {
+            scrollToTop()
+            viewModel.imageForCell.removeAll()
+            self.currentPage = 1
+        }
+        if let text = text, text.isEmpty == false {
+            self.searchText = text
+        } else {
+            self.searchText = nil
+        }
+        self.viewModel.isLodingData = true
+        fetchNextPage()
+    }
+    
+    private func scrollToTop() {
+        let contentOffset = CGPoint(x: 0, y: -collectionView.safeAreaInsets.top)
+        collectionView.setContentOffset(contentOffset, animated: false)
+    }
+    
+    //MARK: - Navigation
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier == "openPhotoDetail"){
+            let popupVC = segue.destination as! PhotoDetailViewController
+            popupVC.imageDetails = viewModel.photos!
+            popupVC.images = viewModel.imageForCell
+            popupVC.curIdx = selectedIdx
+        }
+    }
 }
+
+// MARK: PinterestLayout
 
 extension ViewController: PinterestLayoutDelegate {
     func collectionView(_ collectionView: UICollectionView, heightForPhotoAtIndexPath indexPath: IndexPath) -> CGFloat {
-        let imageAt = images[indexPath.item]
-        guard let image = try? Data(contentsOf: imageAt.urls!.thumb) else {
-            return 0
-        }
-        let height:CGFloat = CGFloat((UIImage(data: image)?.size.height)!)
+        let image = viewModel.imageForCell[indexPath.item].image
+        let height = image.size.height
         
         return height
     }
@@ -61,19 +102,42 @@ extension ViewController: PinterestLayoutDelegate {
 
 //MARK: Data source
 
-extension ViewController:UICollectionViewDataSource {
+extension ViewController:UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        images.count
+        return viewModel.imageForCell.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! ImageCell
-        let imageAt = images[indexPath.item]
-        guard let image = try? Data(contentsOf: imageAt.urls!.thumb) else {
-            return cell
-        }
-        cell.imageView.image = UIImage(data: image)
+        let image = viewModel.imageForCell[indexPath.item].image
+        cell.imageView.image = image
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedIdx = indexPath.row
+        performSegue(withIdentifier: "openPhotoDetail", sender: self)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        let height = collectionView.frame.size.height
+        let contentYoffset = collectionView.contentOffset.y
+        let distanceFromBottom = collectionView.contentSize.height - contentYoffset
+        if distanceFromBottom < height {
+            fetchNextPage()
+        }
+    }
+}
+
+//MARK: - SearchBar Delegate
+
+extension ViewController:UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text else {
+            return
+        }
+        setSearchText(text: text)
     }
 }

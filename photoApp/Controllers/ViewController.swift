@@ -50,10 +50,11 @@ class ViewController: UIViewController {
     }
     
     func fetchNextPage() {
+        let nextPage = currentPage + 1
         if(searchText == "" || searchText == nil) {
-            viewModel.fetchAllPhotos(page: currentPage, per_page: UPDATE_COUNT)
+            viewModel.fetchAllPhotos(page: nextPage, per_page: UPDATE_COUNT)
         } else {
-            viewModel.fetchQueryPhotos(query: searchText!, page: currentPage)
+            viewModel.fetchQueryPhotos(query: searchText!, page: nextPage)
         }
     }
     
@@ -110,8 +111,12 @@ extension ViewController:UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! ImageCell
-        let image = viewModel.imageForCell[indexPath.item].image
-        cell.imageView.image = image
+        if(indexPath.row > viewModel.imageForCell.count) {
+            return cell
+        } else {
+            let image = viewModel.imageForCell[indexPath.item].image
+            cell.imageView.image = image
+        }
         return cell
     }
     

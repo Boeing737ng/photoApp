@@ -16,8 +16,8 @@ enum UnsplashError:Error {
 struct DataRequest {
     let resourceURL:URL
     
-    init(page:Int, per_page:Int) {
-        let resourceString = "\(Configuration.shared.baseURL)photos?page=\(page)&per_page=\(per_page)&client_id=\(Configuration.shared.accessKey)"
+    init(page:Int) {
+        let resourceString = "\(Configuration.shared.baseURL)photos?page=\(page)&client_id=\(Configuration.shared.accessKey)"
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }

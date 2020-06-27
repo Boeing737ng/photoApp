@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     //MARK:  - Properties
-    let UPDATE_COUNT = 5
     var searchText:String?
     var currentPage:Int = 1
     var selectedIdx:Int = 0
@@ -46,13 +45,13 @@ class ViewController: UIViewController {
             }
         }
         
-        viewModel.fetchAllPhotos(page: 1, per_page: 10)
+        viewModel.fetchAllPhotos(page: 1)
     }
     
     func fetchNextPage() {
         let nextPage = currentPage + 1
         if(searchText == "" || searchText == nil) {
-            viewModel.fetchAllPhotos(page: nextPage, per_page: UPDATE_COUNT)
+            viewModel.fetchAllPhotos(page: nextPage)
         } else {
             viewModel.fetchQueryPhotos(query: searchText!, page: nextPage)
         }
@@ -111,7 +110,7 @@ extension ViewController:UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! ImageCell
-        if(indexPath.row > viewModel.imageForCell.count) {
+        if(indexPath.row >= viewModel.imageForCell.count) {
             return cell
         } else {
             let image = viewModel.imageForCell[indexPath.item].image

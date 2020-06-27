@@ -36,9 +36,9 @@ class ViewModel {
         
     }
 
-    func fetchAllPhotos(page:Int, per_page:Int) {
+    func fetchAllPhotos(page:Int) {
         self.isLodingData = true
-        let imageRequest = DataRequest(page: page, per_page: per_page)
+        let imageRequest = DataRequest(page: page)
         imageRequest.getImageData { [weak self] result in
             switch result {
             case .failure(let error):

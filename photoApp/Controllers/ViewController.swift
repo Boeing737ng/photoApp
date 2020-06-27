@@ -126,7 +126,7 @@ extension ViewController:UICollectionViewDataSource, UICollectionViewDelegate {
         let contentYoffset = collectionView.contentOffset.y
         let distanceFromBottom = collectionView.contentSize.height - contentYoffset
         if distanceFromBottom < height {
-            fetchNextPage()
+            //fetchNextPage()
         }
     }
 }

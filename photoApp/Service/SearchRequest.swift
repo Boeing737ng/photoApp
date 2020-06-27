@@ -2,22 +2,17 @@
 //  DataRequest.swift
 //  photoApp
 //
-//  Created by Kihyun Choi on 2020/06/25.
+//  Created by Kihyun Choi on 2020/06/26.
 //  Copyright © 2020 kakaopay. All rights reserved.
 //
 
 import Foundation
 
-enum UnsplashError:Error {
-    case noDataAvailable
-    case canNotProcessData
-}
-
-struct DataRequest {
+struct SearchRequest {
     let resourceURL:URL
     
-    init(page:Int, per_page:Int) {
-        let resourceString = "\(Configuration.shared.baseURL)photos?page=\(page)&per_page=\(per_page)&client_id=\(Configuration.shared.accessKey)"
+    init(searchStr:String, page:Int) {
+        let resourceString = "\(Configuration.shared.baseURL)search/photos?page=\(page)&query=\(searchStr)&client_id=\(Configuration.shared.accessKey)"
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }
@@ -31,8 +26,8 @@ struct DataRequest {
                 return
             }
             do {
-                let response:[ImageDetail] = try JSONDecoder().decode([ImageDetail].self, from: jsonData)
-                completion(.success(response))
+                let response:SearchResult = try JSONDecoder().decode(SearchResult.self, from: jsonData)
+                completion(.success(response.results))
             } catch DecodingError.dataCorrupted(let context) {
                 print(context)
             } catch DecodingError.keyNotFound(let key, let context) {

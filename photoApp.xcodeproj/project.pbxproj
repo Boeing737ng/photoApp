@@ -20,10 +20,10 @@
 		949BACE924A47FD30094455A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 949BACE824A47FD30094455A /* Assets.xcassets */; };
 		949BACEC24A47FD30094455A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 949BACEA24A47FD30094455A /* LaunchScreen.storyboard */; };
 		94ACB15824A61D1900B3FC53 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ACB15724A61D1900B3FC53 /* ImageCell.swift */; };
-		94ACB15A24A6219A00B3FC53 /* PinterestLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ACB15924A6219A00B3FC53 /* PinterestLayout.swift */; };
 		94ACB16124A6371400B3FC53 /* PhotoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ACB16024A6371400B3FC53 /* PhotoDetailViewController.swift */; };
 		94ACB16324A6402C00B3FC53 /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ACB16224A6402C00B3FC53 /* SearchRequest.swift */; };
 		94ACB16524A6686C00B3FC53 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ACB16424A6686C00B3FC53 /* ViewModel.swift */; };
+		94B13817256A4B4B005C3A7D /* ReceiveData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B13816256A4B4B005C3A7D /* ReceiveData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,10 +42,10 @@
 		949BACEB24A47FD30094455A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		949BACED24A47FD30094455A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		94ACB15724A61D1900B3FC53 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
-		94ACB15924A6219A00B3FC53 /* PinterestLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinterestLayout.swift; sourceTree = "<group>"; };
 		94ACB16024A6371400B3FC53 /* PhotoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewController.swift; sourceTree = "<group>"; };
 		94ACB16224A6402C00B3FC53 /* SearchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
 		94ACB16424A6686C00B3FC53 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		94B13816256A4B4B005C3A7D /* ReceiveData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +92,6 @@
 			isa = PBXGroup;
 			children = (
 				94ACB15724A61D1900B3FC53 /* ImageCell.swift */,
-				94ACB15924A6219A00B3FC53 /* PinterestLayout.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -142,6 +141,7 @@
 		94ACB15F24A62A4E00B3FC53 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				94B13815256A4B18005C3A7D /* Protocols */,
 				949BACE324A47FD20094455A /* ViewController.swift */,
 				94ACB16024A6371400B3FC53 /* PhotoDetailViewController.swift */,
 			);
@@ -154,6 +154,14 @@
 				94ACB16424A6686C00B3FC53 /* ViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		94B13815256A4B18005C3A7D /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				94B13816256A4B4B005C3A7D /* ReceiveData.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,7 +235,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				94ACB15A24A6219A00B3FC53 /* PinterestLayout.swift in Sources */,
 				94ACB16324A6402C00B3FC53 /* SearchRequest.swift in Sources */,
 				9458908724A4AAA300945A62 /* DataRequest.swift in Sources */,
 				9458907B24A498C900945A62 /* Photo.swift in Sources */,
@@ -239,6 +246,7 @@
 				9458908F24A4CAB600945A62 /* Configuration.swift in Sources */,
 				9458908B24A4C6CB00945A62 /* UnsplashConfiguration.swift in Sources */,
 				9458908124A49B3300945A62 /* ImageURLs.swift in Sources */,
+				94B13817256A4B4B005C3A7D /* ReceiveData.swift in Sources */,
 				949BACE424A47FD20094455A /* ViewController.swift in Sources */,
 				949BACE024A47FD20094455A /* AppDelegate.swift in Sources */,
 			);

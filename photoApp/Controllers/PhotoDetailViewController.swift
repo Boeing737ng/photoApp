@@ -2,7 +2,7 @@
 //  PhotoDetailViewController.swift
 //  photoApp
 //
-//  Created by Kihyun Choi on 2020/06/26.
+//  Created by Kihyun Choi on 2020/11/22.
 //  Copyright © 2020 kakaopay. All rights reserved.
 //
 
@@ -18,13 +18,17 @@ class PhotoDetailViewController: UIViewController {
     var imageDetails:[ImageDetail] = []
     var images:[ImageForCell] = []
     var curIdx:Int = 0
+    var delegate: isAbleToReceiveData!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setScrollImageInfo()
         focusOnSelectedPhoto()
-        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        delegate.getDataFromModal(data: String(curIdx))
     }
     
     //MARK: - Utils
@@ -55,16 +59,9 @@ class PhotoDetailViewController: UIViewController {
         let offset:CGFloat = CGFloat(curIdx) * singleSecitonWidth
         scrollView.contentOffset.x = offset
         setAdditionalView()
-
-    }
-    
-    func onImageSwipe() {
-        setAdditionalView()
-        
     }
     
     //MARK:  - Action
-    
     @IBAction func onClosePopup(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
@@ -76,7 +73,7 @@ extension PhotoDetailViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let index:Int = Int(scrollView.contentOffset.x / scrollContainerView.frame.width)
         curIdx = index
-        onImageSwipe()
+        setAdditionalView()
     }
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     }

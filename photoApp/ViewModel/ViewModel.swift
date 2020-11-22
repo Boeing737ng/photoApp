@@ -2,7 +2,7 @@
 //  ViewModel.swift
 //  photoApp
 //
-//  Created by Kihyun Choi on 2020/06/27.
+//  Created by Kihyun Choi on 2020/11/22.
 //  Copyright © 2020 kakaopay. All rights reserved.
 //
 
@@ -14,29 +14,35 @@ struct ImageForCell {
 
 class ViewModel {
     // MARK: Properties
+    
+    var setCenterSpinner: (() -> Void)?
+    var reloadData: (() -> Void)?
+    var showError: ((Error) -> Void)?
+    var setBottomSpinner: (() -> Void)?
+    
+    var isInitialLoad = true
     var mode:String?
-    var photos: [ImageDetail]? {
-        didSet {
-            self.fetchPhoto()
-        }
-    }
+    var photos: [ImageDetail] = []
     var imageForCell: [ImageForCell] = []
     
     var isLodingData:Bool = false {
         didSet {
-            showLoading?()
+            if isInitialLoad {
+                setCenterSpinner?()
+            } else {
+                setBottomSpinner?()
+            }
         }
     }
-
-    var showLoading: (() -> Void)?
-    var reloadData: (() -> Void)?
-    var showError: ((Error) -> Void)?
 
     init() {
         
     }
 
     func fetchAllPhotos(page:Int) {
+        if self.photos.count != 0 {
+            isInitialLoad = false
+        }
         self.isLodingData = true
         let imageRequest = DataRequest(page: page)
         imageRequest.getImageData { [weak self] result in
@@ -44,7 +50,9 @@ class ViewModel {
             case .failure(let error):
                 self?.showError?(error)
             case .success(let images):
-                self?.photos = images
+                self?.photos.append(contentsOf: images)
+                self?.fetchImagesFromJson(images: images)
+                self?.dataRequestDidFinish()
             }
         }
     }
@@ -57,31 +65,29 @@ class ViewModel {
             case .failure(let error):
                 self?.showError?(error)
             case .success(let images):
-                self?.photos = images
+                self?.photos.append(contentsOf: images)
+                self?.fetchImagesFromJson(images: images)
+                self?.dataRequestDidFinish()
             }
         }
     }
-
-    private func fetchPhoto() {
-        let group = DispatchGroup()
-        DispatchQueue.global(qos: .background).async(group: group) {
-            group.enter()
-            self.photos?.forEach { (photo) in
-                guard let imageData = try? Data(contentsOf: photo.urls.thumb) else {
-                    self.showError?(UnsplashError.noDataAvailable)
-                    return
-                }
-
-                guard let image = UIImage(data: imageData) else {
-                    self.showError?(UnsplashError.canNotProcessData)
-                    return
-                }
-
-                self.imageForCell.append(ImageForCell(image: image))
+    
+    func fetchImagesFromJson(images:[ImageDetail]) {
+        images.forEach { (image) in
+            guard let imageData = try? Data(contentsOf: image.urls.thumb) else {
+                self.showError?(UnsplashError.noDataAvailable)
+                return
             }
-            group.leave()
+            guard let image = UIImage(data: imageData) else {
+                self.showError?(UnsplashError.canNotProcessData)
+                return
+            }
+            self.imageForCell.append(ImageForCell(image: image))
         }
-        group.notify(queue: .main) {
+    }
+    
+    func dataRequestDidFinish() {
+        DispatchQueue.main.async {
             self.isLodingData = false
             self.reloadData?()
         }

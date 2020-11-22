@@ -2,7 +2,7 @@
 //  DataRequest.swift
 //  photoApp
 //
-//  Created by Kihyun Choi on 2020/06/25.
+//  Created by Kihyun Choi on 2020/11/22.
 //  Copyright © 2020 kakaopay. All rights reserved.
 //
 
@@ -13,7 +13,7 @@ enum UnsplashError:Error {
     case canNotProcessData
 }
 
-struct DataRequest {
+class DataRequest {
     let resourceURL:URL
     
     init(page:Int) {

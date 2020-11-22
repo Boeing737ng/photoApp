@@ -2,7 +2,7 @@
 //  ImageURLs.swift
 //  photoApp
 //
-//  Created by Kihyun Choi on 2020/06/25.
+//  Created by Kihyun Choi on 2020/11/22.
 //  Copyright © 2020 kakaopay. All rights reserved.
 //
 
